@@ -1,0 +1,19 @@
+{
+  "latitude": 10.8,
+  "longitude": 106.6,
+  "utc_offset_seconds": 25200,
+  "timezone": "Asia/Ho_Chi_Minh",
+  "hourly_units": {"time": "iso8601", "temperature_2m": "°C"},
+  "hourly": {
+    "time": ["2026-11-23T00:00", "2026-11-23T01:00", "2026-11-23T07:00"],
+    "temperature_2m": [27.0, null, 29.5],
+    "apparent_temperature": [32.6, 32.1, 35.0],
+    "relative_humidity_2m": [88, 89, 70],
+    "precipitation": [0.0, 0.0, 0.2],
+    "rain": [0.0, 0.0, 0.2],
+    "weather_code": [2, 3, null],
+    "cloud_cover": [77, 90, 100],
+    "shortwave_radiation": [0.0, 0.0, 120.0],
+    "wind_speed_10m": [6.8, 7.0, 9.1]
+  }
+}

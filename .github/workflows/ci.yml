@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Runs the unit tests (no network) and builds the Lambda image.
+  build:
+    name: build
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements-dev.txt
+
+      - run: pytest
+
+      - name: build image
+        run: docker build -t ingest-open-meteo:ci .
+
+  # Only main pushes an image; a PR's build is already covered by the build job above.
+  image:
+    needs: build
+    if: github.event_name != 'pull_request'
+    uses: maison-douce-bakery/platform-ci-workflows/.github/workflows/docker-build-push.yml@7beee702a116f27e5db8855c6082cf35cb2fb949 # docker-build-push/v1.1.0
+    with:
+      ecr_repository: mdb/ingest-open-meteo
+      role_arn: ${{ vars.AWS_CI_PUSH_ROLE_ARN }}
+      aws_region: ${{ vars.AWS_REGION }}
+    secrets:
+      aws_access_key_id: ${{ secrets.AWS_CI_PUSH_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_CI_PUSH_SECRET_ACCESS_KEY }}
