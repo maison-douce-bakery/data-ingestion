@@ -32,6 +32,13 @@ python -m open_meteo.load
 Env: `DATALAKE_BUCKET`, `DP_LOADER_HOST`, `DP_LOADER_PASSWORD`; optional `DP_LOADER_PORT` (5432), `DP_LOADER_USER` (dp_loader),
 `DP_LOADER_DBNAME` (bakery), `DP_LOADER_SSLMODE` (require).
 
+### Invoke
+
+Dagu triggers the extract with `python -m open_meteo.invoke --run-date 2026-11-26 --lookback-days 7`. It calls the Lambda
+synchronously (no retries, so an extract is never duplicated), prints the response as one JSON line and exits non-zero if the
+function fails or `status` is not `ok`. Options: `--start-date`, `--end-date`, `--locations A,B`, `--function`
+(default env `INGEST_FUNCTION_NAME`, else `mdb-prod-ingest-open-meteo`). It needs `lambda:InvokeFunction`.
+
 Files are append-only, so overlapping windows load as revisions. Latest value per hour:
 
 ```sql
