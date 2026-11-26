@@ -1,0 +1,5 @@
+# One entry per location; the key is the location_code stored in every row.
+HCM_MAIN:
+  latitude: 10.8231
+  longitude: 106.6297
+  timezone: Asia/Ho_Chi_Minh
